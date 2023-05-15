@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
+import Home from "./pages/Home";
 
 const getUser = () => Promise.resolve({ id: 1, name: "Yauhen" });
 
@@ -36,6 +37,7 @@ const App = () => {
 
   return (
     <div>
+      <Home />
       {user && <h2>Logged in as{user.name}</h2>}
       <img src="" alt="search image" />
       <Search value={search} onChange={handleChange}>
