@@ -10,14 +10,15 @@ describe("App", () => {
     await screen.findByText(/Logged in as/i);
     expect(screen.queryByText(/Searches for React/)).toBeNull();
     // screen.debug();
-    // fireEvent.change(screen.getByRole("textbox"), {
-    //   target: { value: "React" },
-    // });
-    userEvent.type(screen.getByRole("textbox"), "React");
+    fireEvent.change(screen.getByRole("textbox"), {
+      target: { value: "React" },
+    });
+    // userEvent.type(screen.getByRole("textbox"), "React");
     expect(screen.getByText(/Searches for React/)).toBeInTheDocument();
     // screen.debug();
   });
 });
+//
 
 describe("events", () => {
   it("checkbox click", () => {

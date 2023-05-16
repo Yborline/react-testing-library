@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { render, act } from "@testing-library/react";
+import { render, screen, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Home from "./Home";
 
@@ -8,15 +8,17 @@ jest.mock("axios");
 const hits = [
   { objectID: "1", title: "Angular" },
   { objectID: "2", title: "React" },
+  { objectID: "3", title: "Vue" },
 ];
 
 describe("Home", () => {
   test("fetches news from an Api", async () => {
     axios.get.mockImplementationOnce(() => Promise.resolve({ data: { hits } }));
-    const { getByRole, findAllByRole } = render(<Home />);
-    userEvent.click(getByRole("button"));
-    const items = await findAllByRole("listitem");
-    expect(items).toHaveLength(2);
+    render(<Home />);
+    const button = screen.getByRole("button");
+    userEvent.click(button);
+    const items = await screen.findAllByRole("listitem");
+    expect(items).toHaveLength(3);
     ///
     expect(axios.get).toHaveBeenCalledTimes(1);
     expect(axios.get).toHaveBeenCalledWith(
@@ -25,18 +27,18 @@ describe("Home", () => {
   });
   test("fetches news from an API and reject", async () => {
     axios.get.mockImplementationOnce(() => Promise.reject(new Error()));
-    const { getByRole, findByText } = render(<Home />);
-    userEvent.click(getByRole("button"));
-    const message = await findByText(/Something went wrong/);
+    render(<Home />);
+    userEvent.click(screen.getByRole("button"));
+    const message = await screen.findByText(/Something went wrong/);
     expect(message).toBeInTheDocument();
   });
-  test("fetches news from an Api", async () => {
+  test("new fetches news from an Api", async () => {
     const promise = Promise.resolve({ data: { hits } });
     axios.get.mockImplementationOnce(() => promise);
-    const { getByRole, getAllByRole } = render(<Home />);
-    userEvent.click(getByRole("button"));
+    render(<Home />);
+    userEvent.click(screen.getByRole("button"));
     await act(() => promise);
-    expect(getAllByRole("listitem")).toHaveLength(2);
+    expect(screen.getAllByRole("listitem")).toHaveLength(3);
   });
 });
 
