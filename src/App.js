@@ -3,6 +3,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import Home from "./pages/Home";
 import Modal from "./Components/Portal/Modal";
+import { Contact, RouterComponent } from "./ReactRouter.test";
 
 const getUser = () => Promise.resolve({ id: 1, name: "Yauhen" });
 
@@ -49,7 +50,6 @@ const App = () => {
           <h2>pppp</h2>
         </Modal>
       )}
-
       <Home />
       {user && <h2>Logged in as{user.name}</h2>}
       <img src="" alt="search image" />

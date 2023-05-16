@@ -6,11 +6,11 @@ modalRoot.setAttribute("id", "modal-root");
 document.body.appendChild(modalRoot);
 
 const Modal = ({ onClose, children }) => {
-  // const el = document.createElement("div");
+  const el = document.createElement("div");
 
   useEffect(() => {
-    // modalRoot.appendChild(el);
-    // return () => modalRoot.removeChild(el);
+    modalRoot.appendChild(el);
+    return () => modalRoot.removeChild(el);
   });
 
   return createPortal(
@@ -20,8 +20,8 @@ const Modal = ({ onClose, children }) => {
         <button onClick={onClose}>Close</button>
       </div>
     </div>,
-    modalRoot
-    // el
+    // modalRoot
+    el
   );
 };
 

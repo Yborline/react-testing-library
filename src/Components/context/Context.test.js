@@ -1,6 +1,7 @@
 import React, { useState, useContext, createContext } from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { act } from "react-dom/test-utils";
 
 const AuthContext = createContext();
 
@@ -13,7 +14,7 @@ const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ toggleLogin, isLoggedIn }}>
-      <div>Message: {children}</div>
+      <div>{children}</div>
     </AuthContext.Provider>
   );
 };
@@ -23,8 +24,8 @@ const ConsumerComponent = () => {
 
   return (
     <>
-      <button type="button" value="Login" onClick={toggleLogin} />
-      {isLoggedIn ? "Welcome!" : "Please, log in"}
+      <button data-testid="user-button" type="button" onClick={toggleLogin} />
+      <h2>Message: {isLoggedIn ? "Welcome!" : "Please, log in"}</h2>
     </>
   );
 };
@@ -36,25 +37,27 @@ describe("Context", () => {
         <ConsumerComponent />
       </AuthProvider>
     );
+
     expect(screen.getByText(/^Message:/)).toHaveTextContent(
       "Message: Please, log in"
     );
   });
 
-  it("ConsumerComponent toggle value", () => {
+  it("ConsumerComponent toggle value", async () => {
     render(
       <AuthProvider>
         <ConsumerComponent />
       </AuthProvider>
     );
+
     expect(screen.getByText(/^Message:/)).toHaveTextContent(
       "Message: Please, log in"
     );
-    fireEvent.click(screen.getByRole("button"));
+    fireEvent.click(screen.getByTestId("user-button"));
     expect(screen.getByText(/^Message:/)).toHaveTextContent(
       "Message: Welcome!"
     );
-    fireEvent.click(screen.getByRole("button"));
+    fireEvent.click(screen.getByTestId("user-button"));
     expect(screen.getByText(/^Message:/)).toHaveTextContent(
       "Message: Please, log in"
     );
