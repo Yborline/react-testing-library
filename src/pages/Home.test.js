@@ -3,6 +3,7 @@ import axios from "axios";
 import { render, screen, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Home from "./Home";
+import "@testing-library/jest-dom";
 
 jest.mock("axios");
 const hits = [
@@ -16,7 +17,7 @@ describe("Home", () => {
     axios.get.mockImplementationOnce(() => Promise.resolve({ data: { hits } }));
     render(<Home />);
     const button = screen.getByRole("button");
-    userEvent.click(button);
+    await userEvent.click(button);
     const items = await screen.findAllByRole("listitem");
     expect(items).toHaveLength(3);
     ///
@@ -28,7 +29,7 @@ describe("Home", () => {
   test("fetches news from an API and reject", async () => {
     axios.get.mockImplementationOnce(() => Promise.reject(new Error()));
     render(<Home />);
-    userEvent.click(screen.getByRole("button"));
+    await userEvent.click(screen.getByRole("button"));
     const message = await screen.findByText(/Something went wrong/);
     expect(message).toBeInTheDocument();
   });
@@ -36,7 +37,7 @@ describe("Home", () => {
     const promise = Promise.resolve({ data: { hits } });
     axios.get.mockImplementationOnce(() => promise);
     render(<Home />);
-    userEvent.click(screen.getByRole("button"));
+    await userEvent.click(screen.getByRole("button"));
     await act(() => promise);
     expect(screen.getAllByRole("listitem")).toHaveLength(3);
   });

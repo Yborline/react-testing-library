@@ -1,64 +1,41 @@
-import React, { useEffect, useState } from "react";
-import logo from "./logo.svg";
-import "./App.css";
-import Home from "./pages/Home";
-import Modal from "./Components/Portal/Modal";
-import { Contact, RouterComponent } from "./ReactRouter.test";
+import React from "react";
+import { Link, Route, Routes, useLocation } from "react-router-dom";
 
-const getUser = () => Promise.resolve({ id: 1, name: "Yauhen" });
+const About = () => <h1 data-testid={"About-h1"}>You are on the about page</h1>;
+const Home = () => <h1 data-testid={"Home-h1"}>Home page</h1>;
+const Contact = () => <h1 data-testid={"Contact-h1"}>Contact</h1>;
+const NoMatch = () => <h1 data-testid={"NoMatch-h1"}>No match</h1>;
 
-const Search = ({ value, onChange, children }) => (
-  <div>
-    <label htmlFor="search">{children}</label>
-    <input
-      placeholder="search text..."
-      id="search"
-      type="text"
-      value={value}
-      onChange={onChange}
-      required
-    />
-  </div>
-);
+export const LocationDisplay = () => {
+  const location = useLocation();
 
-const App = () => {
-  const [search, setSearch] = useState("");
-  const [user, setUser] = useState("");
-  const [showModal, setShowModal] = useState(false);
-
-  useEffect(() => {
-    const loadUser = async () => {
-      const user = await getUser();
-      setUser(user);
-    };
-    loadUser();
-  }, []);
-
-  const handleChange = ({ target }) => {
-    setSearch(target.value);
-  };
-
-  const changeShowModal = () => {
-    setShowModal(!showModal);
-  };
-
-  return (
-    <div>
-      <button onClick={changeShowModal}>Open</button>
-      {showModal && (
-        <Modal onClose={changeShowModal}>
-          <h2>pppp</h2>
-        </Modal>
-      )}
-      <Home />
-      {user && <h2>Logged in as{user.name}</h2>}
-      <img src="" alt="search image" />
-      <Search value={search} onChange={handleChange}>
-        Search:
-      </Search>
-      <p>Searches for {search ? search : "..."}</p>
-    </div>
-  );
+  return <div data-testid="location-display">{location.pathname}</div>;
 };
 
-export default App;
+const Name = "John-Kynni";
+
+export const App = () => (
+  <div>
+    <nav data-testid="navbar">
+      <Link data-testid="home-link" to="/">
+        Home
+      </Link>
+
+      <Link data-testid="about-link" to="/about">
+        About
+      </Link>
+      <Link to={`/contact/${Name}`} data-testid="contact-link">
+        Contact
+      </Link>
+    </nav>
+    <Routes>
+      <Route path="/" element={<Home />} />
+
+      <Route path="/about" element={<About />} />
+      <Route path="/contact/:name" element={<Contact />} />
+      <Route path="*" element={<NoMatch />} />
+    </Routes>
+
+    <LocationDisplay />
+  </div>
+);

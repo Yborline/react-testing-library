@@ -2,6 +2,7 @@ import React, { useState, useContext, createContext } from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { act } from "react-dom/test-utils";
+import "@testing-library/jest-dom";
 
 const AuthContext = createContext();
 
